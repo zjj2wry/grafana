@@ -8,8 +8,10 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"sync"
 
+	"github.com/grafana/grafana/pkg/services/grpcapi"
 	"github.com/grafana/grafana/pkg/services/live"
 	"github.com/grafana/grafana/pkg/services/search"
 
@@ -88,6 +90,20 @@ func (hs *HTTPServer) Init() error {
 		// Spit random walk to example
 		go live.RunRandomCSV(hs.Live, "random-2s-stream", 2000, 0)
 		go live.RunRandomCSV(hs.Live, "random-flakey-stream", 400, .6)
+	}
+
+	if hs.Cfg.IsGRPCApiServerEnabled() {
+		port, err := strconv.Atoi(setting.HttpPort) // HttpPort is not in cfg
+		if err != nil {
+			port = 3000
+		}
+
+		apisrv := grpcapi.GRPCApiServer{
+			BackendPluginManager: &hs.BackendPluginManager,
+			Live:                 hs.Live,
+			PluginManager:        hs.PluginManager,
+		}
+		go apisrv.RunAPIServer(fmt.Sprintf(":%d", port+1))
 	}
 
 	hs.macaron = hs.newMacaron()

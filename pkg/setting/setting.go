@@ -320,6 +320,11 @@ func (c Cfg) IsLiveEnabled() bool {
 	return c.FeatureToggles["live"]
 }
 
+// IsGRPCServerEnabled returns if grafana should start a GRPC server
+func (c Cfg) IsGRPCApiServerEnabled() bool {
+	return c.FeatureToggles["grpcapi"]
+}
+
 type CommandLineArgs struct {
 	Config   string
 	HomePath string
