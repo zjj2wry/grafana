@@ -1,0 +1,17 @@
+{
+  "type": "panel",
+  "name": "Bar Chart",
+  "id": "barchart",
+  "state": "alpha",
+
+  "info": {
+    "author": {
+      "name": "Grafana Labs",
+      "url": "https://grafana.com"
+    },
+    "logos": {
+      "small": "img/icon_bar_chart.svg",
+      "large": "img/icon_bar_chart.svg"
+    }
+  }
+}
