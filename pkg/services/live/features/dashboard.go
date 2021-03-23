@@ -3,8 +3,14 @@ package features
 import (
 	"encoding/json"
 
+	"github.com/grafana/grafana/pkg/infra/log"
+
 	"github.com/centrifugal/centrifuge"
 	"github.com/grafana/grafana/pkg/models"
+)
+
+var (
+	logger = log.New("live.features") // scoped to all features?
 )
 
 // DashboardEvent events related to dashboards

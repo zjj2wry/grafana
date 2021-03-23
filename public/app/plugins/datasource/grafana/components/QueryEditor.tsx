@@ -19,7 +19,7 @@ export class QueryEditor extends PureComponent<Props> {
       description: 'Random signal within the selected time range',
     },
     {
-      label: 'Live Measurements',
+      label: 'Live Data',
       value: GrafanaQueryType.LiveMeasurements,
       description: 'Stream real-time measurements from Grafana',
     },

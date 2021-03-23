@@ -38,6 +38,14 @@ type CoreGrafanaScope struct {
 	Dashboards models.DashboardActivityChannel
 }
 
+// LiveDataScope holds
+type LiveDataScope struct {
+	Features map[string]models.ChannelHandlerFactory
+
+	// The generic service to advertise dashboard changes
+	Dashboards models.DashboardActivityChannel
+}
+
 // GrafanaLive pretends to be the server
 type GrafanaLive struct {
 	Cfg           *setting.Cfg            `inject:""`
@@ -95,7 +103,6 @@ func (g *GrafanaLive) Init() error {
 		Publisher: g.Publish,
 	}
 	g.GrafanaScope.Features["broadcast"] = &features.BroadcastRunner{}
-	g.GrafanaScope.Features["measurements"] = &features.MeasurementsRunner{}
 
 	// Set ConnectHandler called when client successfully connected to Node. Your code
 	// inside handler must be synchronized since it will be called concurrently from
@@ -212,6 +219,10 @@ func (g *GrafanaLive) GetChannelHandlerFactory(scope string, name string) (model
 
 	if scope == "ds" {
 		return nil, fmt.Errorf("todo... look up datasource: %q", name)
+	}
+
+	if scope == "data" {
+		return &LiveDataHandler{name}, nil
 	}
 
 	if scope == "plugin" {
