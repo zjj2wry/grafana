@@ -8,6 +8,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
   mode: 'production',
@@ -117,6 +118,7 @@ module.exports = merge(common, {
       excludeChunks: ['manifest', 'dark', 'light'],
       chunksSortMode: 'none',
     }),
+    new BundleAnalyzerPlugin(),
     function () {
       this.hooks.done.tap('Done', function (stats) {
         if (stats.compilation.errors && stats.compilation.errors.length) {
