@@ -60,16 +60,12 @@ func NewEmailNotifier(model *models.AlertNotification) (*EmailNotifier, error) {
 
 // Notify sends the alert notification.
 func (en *EmailNotifier) Notify(ctx context.Context, as ...*types.Alert) (bool, error) {
-	// TODO(codesome): make sure the receiver name is added in the ctx before calling this.
-	ctx = notify.WithReceiverName(ctx, "email-notification-channel") // Dummy.
-	// TODO(codesome): make sure the group labels is added in the ctx before calling this.
-	ctx = notify.WithGroupLabels(ctx, model.LabelSet{}) // Dummy.
+	// TODO(codesome): where is the group labels added.
 
 	// We only need ExternalURL from this template object. This hack should go away with https://github.com/prometheus/alertmanager/pull/2508.
 	data := notify.GetTemplateData(ctx, &template.Template{ExternalURL: en.externalUrl}, as, gokit_log.NewNopLogger())
 
 	title := getTitleFromTemplateData(data)
-
 	cmd := &models.SendEmailCommandSync{
 		SendEmailCommand: models.SendEmailCommand{
 			Subject: title,

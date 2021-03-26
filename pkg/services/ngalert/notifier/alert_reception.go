@@ -2,6 +2,7 @@ package notifier
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -60,6 +61,7 @@ func (ap *AlertProvider) PutPostableAlert(alerts ...*PostableAlert) error {
 		}
 	}
 
+	fmt.Println(len(alertsWithoutReceivers))
 	// Without receiver names, alerts go through routing.
 	if err := ap.Alerts.Put(alertsWithoutReceivers...); err != nil {
 		return err
@@ -77,10 +79,12 @@ func (ap *AlertProvider) PutPostableAlert(alerts ...*PostableAlert) error {
 		}
 	}
 
+	ctx := notify.WithGroupKey(context.Background(), "alertname")
+	ctx = notify.WithRepeatInterval(ctx, time.Minute)
 	for recv, alerts := range groupedAlerts {
 		ap.stageMtx.Lock()
-		ctx := notify.WithReceiverName(context.Background(), recv)
-		_, _, err := ap.stage.Exec(ctx, gokit_log.NewNopLogger(), alerts...)
+		newctx := notify.WithReceiverName(ctx, recv)
+		_, _, err := ap.stage.Exec(newctx, gokit_log.NewNopLogger(), alerts...)
 		ap.stageMtx.Unlock()
 		if err != nil {
 			return err
