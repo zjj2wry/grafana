@@ -31,6 +31,7 @@ import { metricAggregationConfig } from './components/QueryEditor/MetricAggregat
 import {
   isMetricAggregationWithField,
   isPipelineAggregationWithMultipleBucketPaths,
+  Logs,
 } from './components/QueryEditor/MetricAggregationsEditor/aggregations';
 import { bucketAggregationConfig } from './components/QueryEditor/BucketAggregationsEditor/utils';
 import { isBucketAggregationWithField } from './components/QueryEditor/BucketAggregationsEditor/aggregations';
@@ -544,9 +545,13 @@ export class ElasticDatasource extends DataSourceApi<ElasticsearchQuery, Elastic
       let queryObj;
       if (hasMetricOfType(target, 'logs')) {
         target.bucketAggs = [defaultBucketAgg()];
-        target.metrics = [];
+
+        const log = target.metrics?.find((m) => m.type === 'logs') as Logs;
+        const limit = log.settings?.limit ? parseInt(log.settings?.limit, 10) : 500;
+
         // Setting this for metrics queries that are typed as logs
-        queryObj = this.queryBuilder.getLogsQuery(target, adhocFilters, target.query);
+        target.metrics = [];
+        queryObj = this.queryBuilder.getLogsQuery(target, limit, adhocFilters, target.query);
       } else {
         if (target.alias) {
           target.alias = this.templateSrv.replace(target.alias, options.scopedVars, 'lucene');

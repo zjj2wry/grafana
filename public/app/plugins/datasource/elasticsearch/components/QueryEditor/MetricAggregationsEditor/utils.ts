@@ -223,10 +223,15 @@ export const metricAggregationConfig: MetricsConfiguration = {
     isPipelineAgg: false,
     supportsMissing: false,
     supportsMultipleBucketPaths: false,
-    hasSettings: false,
+    hasSettings: true,
+    isSingleMetric: true,
     supportsInlineScript: false,
     hasMeta: false,
-    defaults: {},
+    defaults: {
+      settings: {
+        limit: '500',
+      },
+    },
   },
 };
 
