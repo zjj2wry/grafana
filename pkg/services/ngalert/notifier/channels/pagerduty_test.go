@@ -3,7 +3,6 @@ package channels
 import (
 	"context"
 	"errors"
-	"github.com/grafana/grafana/pkg/services/alerting"
 	"os"
 	"testing"
 
@@ -15,6 +14,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/components/simplejson"
 	"github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/services/alerting"
 )
 
 func TestPagerdutyNotifier(t *testing.T) {
@@ -46,7 +46,7 @@ func TestPagerdutyNotifier(t *testing.T) {
 			expMsg: &pagerDutyMessage{
 				RoutingKey:  "abcdefgh0123456789",
 				DedupKey:    "6e3538104c14b583da237e9693b76debbc17f0f8058ef20492e5853096cf8733",
-				Description: "[firing:1] (val1)",
+				Description: "[firing:1]  (val1)",
 				EventAction: "trigger",
 				Payload: &pagerDutyPayload{
 					Summary:   "[FIRING:1]  (val1)",
@@ -93,7 +93,7 @@ func TestPagerdutyNotifier(t *testing.T) {
 			expMsg: &pagerDutyMessage{
 				RoutingKey:  "abcdefgh0123456789",
 				DedupKey:    "6e3538104c14b583da237e9693b76debbc17f0f8058ef20492e5853096cf8733",
-				Description: "[firing:2] ",
+				Description: "[firing:2]  ",
 				EventAction: "trigger",
 				Payload: &pagerDutyPayload{
 					Summary:   "[FIRING:2]  ",
